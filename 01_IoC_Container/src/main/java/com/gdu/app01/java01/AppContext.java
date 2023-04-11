@@ -49,8 +49,4 @@ public class AppContext {
 		return new User("superman", www());
 	}
 	
-	
-	
-	
-	
 }

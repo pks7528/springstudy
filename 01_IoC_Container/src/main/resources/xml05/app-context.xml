@@ -15,7 +15,7 @@
 		</property>
 		
 		<!-- Set -->
-		<property name="contacts">
+		<property name="contacts"> <!-- set은 중복 ㄴㄴ -->
 			<set>
 				<value>010-1234-5678</value>
 				<value>010-1234-5678</value>

@@ -6,7 +6,7 @@ public class Contact {
 	private String tel;
 	private String fax;
 	
-	// dafault constructor
+	// default constructor
 	public Contact() {
 		
 	}

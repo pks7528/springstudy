@@ -1,4 +1,4 @@
-package com.gdu.app04.repository;
+package com.gdu.app05.repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,37 +7,42 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 import org.springframework.stereotype.Repository;
 
-import com.gdu.app04.domain.BoardDTO;
+import com.gdu.app05.domain.BoardDTO;
 
-@Repository	// DAO가 사용하는 @Component
-			// Spring Container에 Bean이 등록될 때 Singletone으로 등록되기 때문에 별도의 Singleton Pattern 코드를 작성할 필요가 없다.
+
+// @Repository 대신 AppConfig에 @Bean이 등록되어 있다.
 public class BoardDAO {
 	
-	// jdbc 방식
+	// dbcp 방식 (jdbc + DataSource)
 	private Connection con;
 	private PreparedStatement ps;
 	private ResultSet rs;
 	private String sql;
+	private DataSource dataSource;
 	
-	// private 메소드 - 1 (BoardDAO 클래스 내부에서만 사용)
-	public Connection getConnection() {
+	// BoardDAO 생성자 (webapp/META-INF/context.xml에 작성한 <Resource> 태그 읽기)
+	public BoardDAO() {
+		// JNDI 방식 : <Resource> 태그의 name 속성으로 Resource를 읽어들이는 방식
 		try {
-			Class.forName("oracle.jdbc.OracleDriver");	// ojdbc8.jar 메모리 로드
-			return DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "GDJ61", "1111");
-		} catch(Exception e) {
+			Context context = new InitialContext();
+			dataSource = (DataSource)context.lookup("java:comp/env/jdbc/GDJ61");
+		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
 		}
 	}
 	
-	// private 메소드 -2 (BoardDAO 클래스 내부에서만 사용) 
+	// private 메소드 (BoardDAO 클래스 내부에서만 사용) 
 	private void close() {
 		try {
 			if(rs != null) rs.close();
 			if(ps != null) ps.close();
-			if(con != null) con.close();
+			if(con != null) con.close();	// 사용한 Connection을 dataSource에게 반납한다.
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -52,7 +57,7 @@ public class BoardDAO {
 	public List<BoardDTO> selectBoardList(){
 		List<BoardDTO> list = new ArrayList<BoardDTO>();
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();	// dataSource가 관리하는 Connecgtion 8개 중 하나를 대여한다.
 			sql = "SELECT BOARD_NO, TITLE, CONTENT, WRITER, CREATED_AT, MODIFIED_AT FROM BOARD ORDER BY BOARD_NO DESC";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
@@ -72,7 +77,7 @@ public class BoardDAO {
 	public BoardDTO selectBoardByNo(int board_no) {
 		BoardDTO board = null;
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 			sql = "SELECT BOARD_NO, TITLE, CONTENT, WRITER, CREATED_AT, MODIFIED_AT FROM BOARD WHERE BOARD_NO = ?";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, board_no);	// 첫번째 물음표에 board_no 전달
@@ -92,7 +97,7 @@ public class BoardDAO {
 	public int insertBoard(BoardDTO board) {
 		int result = 0;
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 			sql = "INSERT INTO BOARD VALUES(BOARD_SEQ.NEXTVAL, ?, ?, ?, TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, board.getTitle());
@@ -111,7 +116,7 @@ public class BoardDAO {
 	public int updateBoard(BoardDTO board) {
 		int result = 0;
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 			sql = "UPDATE BOARD SET TITLE = ?, CONTENT = ?, MODIFIED_AT = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') WHERE BOARD_NO = ?";
 			ps = con.prepareStatement(sql);
 			ps.setString(1, board.getTitle());
@@ -130,7 +135,7 @@ public class BoardDAO {
 	public int deleteBoard(int board_no) {
 		int result = 0;
 		try {
-			con = getConnection();
+			con = dataSource.getConnection();
 			sql = "DELETE FROM BOARD WHERE BOARD_NO = ?";
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, board_no);

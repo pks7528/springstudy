@@ -1,5 +1,9 @@
-package com.gdu.app04.controller;
+package com.gdu.app05.controller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,19 +12,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.gdu.app04.domain.BoardDTO;
-import com.gdu.app04.service.BoardService;
+import com.gdu.app05.domain.BoardDTO;
+import com.gdu.app05.service.BoardService;
 
-@RequestMapping("/board")	// 모든 mapping에 /board가 prefix로 추가됩니다.
+@RequestMapping("/board")
 @Controller
 public class BoardController {
 	
+	// BoardController 클래스를 실행할 때 org.slf4j.Logger를 동작시킨다.
+	private static final Logger LOGGER = LoggerFactory.getLogger(BoardController.class);
+	
 	@Autowired
 	private BoardService boardService;
-
+	
 	@GetMapping("/list.do")
-	public String list(Model model) { // Model : jsp로 전달(forward)할 데이터(속성, attribute)를 저장한다.
-		model.addAttribute("boardList", boardService.getBoardList()); 
+	public String list(Model model) {
+		List<BoardDTO> list = boardService.getBoardList();
+		LOGGER.debug(list.toString());	// 목록 확인
+		model.addAttribute("boardList", list);
 		return "board/list";
 	}
 	
@@ -31,25 +40,32 @@ public class BoardController {
 	
 	@PostMapping("/add.do")
 	public String add(BoardDTO board) {
-		boardService.addBoard(board);		// addBoard() 메소드의 호출 결과인 int 값(0 또는 1)은 사용하지 않았다.
-		return "redirect:/board/list.do";	// 목록 보기로 redirect(redirect 경로는 항상 mapping으로 작성한다.)
+		LOGGER.debug(board.toString());	// 파라미터 확인
+		LOGGER.debug(boardService.addBoard(board) + "");	// 결과 확인
+		return "redirect:/board/list.do";
 	}
 	
 	@GetMapping("/detail.do")
 	public String detail(@RequestParam(value="board_no", required = false, defaultValue = "0") int board_no
 						, Model model) {
-		model.addAttribute("b", boardService.getBoardByNo(board_no));
+		LOGGER.debug(board_no + "");	// 파라미터 확인
+		BoardDTO b = boardService.getBoardByNo(board_no);
+		LOGGER.debug(b.toString());	// 상세 결과 확인
+		model.addAttribute("b", b);
 		return "board/detail";
 	}
 	
 	@GetMapping("/remove.do")
 	public String remove(@RequestParam(value="board_no", required = false, defaultValue = "0") int board_no) {
-		boardService.removeBoard(board_no);
+		LOGGER.debug(board_no + "");	// 파라미터 확인
+		LOGGER.debug(boardService.removeBoard(board_no) + "");
 		return "redirect:/board/list.do";
 	}
 	
 	@PostMapping("/modify.do")
 	public String modify(BoardDTO board) {
+		LOGGER.debug(board.toString());	// 파라미터 확인
+		LOGGER.debug(boardService.modifyBoard(board) + "");	// 결과 확인
 		boardService.modifyBoard(board);
 		return "redirect:/board/detail.do?board_no=" + board.getBoard_no();
 	}

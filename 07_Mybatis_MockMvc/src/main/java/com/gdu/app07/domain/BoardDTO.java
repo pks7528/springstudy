@@ -12,6 +12,6 @@ public class BoardDTO {
 	private String title;
 	private String content;
 	private String writer;
-	private String createAt;
+	private String createdAt;
 	private String modifiedAt;
 }

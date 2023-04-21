@@ -22,7 +22,7 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DBConfig {
 	
 	@Autowired
-	private Environment env;
+	private Environment env; // 프로터티를 불러들이는 @@PropertySource ?? / 빈은 스피링이 가지고 있다
 	
 	// HikariConfig Bean
 	@Bean
@@ -37,15 +37,15 @@ public class DBConfig {
 	
 	// HikariDataSource Bean
 	@Bean(destroyMethod = "close")
-	public HikariDataSource dataSource() {
+	public HikariDataSource hikariDataSource() {
 		return new HikariDataSource(hikariConfig());
 	}
 	
 	// SqlSessionFactory Bean
 	@Bean
-	public SqlSessionFactory factory() throws Exception {
+	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-		bean.setDataSource(dataSource());
+		bean.setDataSource(hikariDataSource());
 		bean.setConfigLocation(new PathMatchingResourcePatternResolver().getResource(env.getProperty("mybatis.config-location")));
 		bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(env.getProperty("mybatis.mapper-locations")));
 		return bean.getObject();
@@ -53,14 +53,14 @@ public class DBConfig {
 	
 	// SqlSessionTemplate Bean (기존의 SqlSession)
 	@Bean
-	public SqlSessionTemplate templete() throws Exception {
-		return new SqlSessionTemplate(factory());
+	public SqlSessionTemplate sqlSessionTemplate() throws Exception {
+		return new SqlSessionTemplate(sqlSessionFactory());
 	}
 	
 	// TransactionManager Bean
 	@Bean
 	public TransactionManager transactionManager() {
-		return new DataSourceTransactionManager(dataSource());
+		return new DataSourceTransactionManager(hikariDataSource());
 	}
 	
 	

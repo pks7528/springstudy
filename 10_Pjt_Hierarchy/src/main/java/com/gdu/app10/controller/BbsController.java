@@ -1,6 +1,5 @@
 package com.gdu.app10.controller;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +44,10 @@ public class BbsController {
 		return "redirect:/bbs/list.do";
 	}
 	
-	
+	@PostMapping("/reply/add.do")
+	public String replyAdd(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+		int addReplyResult = bbsService.addReply(request);
+		redirectAttributes.addFlashAttribute("addReplyResult", addReplyResult);
+		return "redirect:/bbs/list.do";
+	}
 }

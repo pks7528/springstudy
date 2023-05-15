@@ -13,47 +13,48 @@
 <script src="${contextPath}/resources/summernote-0.8.18-dist/summernote-lite.min.js"></script>
 <script src="${contextPath}/resources/summernote-0.8.18-dist/lang/summernote-ko-KR.min.js"></script>
 <link rel="stylesheet" href="${contextPath}/resources/summernote-0.8.18-dist/summernote-lite.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script>
-function fnEdit(){
-	$('#edit_screen').show();
-	$('#detail_screen').hide();
-}
-function fnRemove(){
-	if(confirm('삭제할까요?')){
-		$('#frm_remove').submit();
+	function fnEdit(){
+		$('#edit_screen').show();
+		$('#detail_screen').hide();
 	}
-}
-function fnList(){
-	location.href = '${contextPath}/board/list.do';
-}
-function fnBack(){
-	$('#edit_screen').hide();
-	$('#detail_screen').show();
-}
-$(function(){
-	$('#content').summernote({
-		width: 640,
-		height: 480,
-		lang: 'ko-KR',
-		toolbar: [
-			['style', ['bold', 'italic', 'underline', 'clear']],
-			['font', ['strikethrough', 'superscript', 'subscript']],
-			['fontname', ['fontname']],
-			['color', ['color']],
-			['para', ['ul', 'ol', 'paragraph']],
-			['table', ['table']],
-			['insert', ['link', 'picture', 'video']],
-			['view', ['fullscreen', 'codeview', 'help']]
-		]
+	function fnRemove(){
+		if(confirm('삭제할까요?')){
+			$('#frm_remove').submit();
+		}
+	}
+	function fnList(){
+		location.href = '${contextPath}/board/list.do';
+	}
+	function fnBack(){
+		$('#edit_screen').hide();
+		$('#detail_screen').show();
+	}
+	$(function(){
+		$('#content').summernote({
+			width: 640,
+			height: 480,
+			lang: 'ko-KR',
+			toolbar: [
+				['style', ['bold', 'italic', 'underline', 'clear']],
+				['font', ['strikethrough', 'superscript', 'subscript']],
+				['fontname', ['fontname']],
+				['color', ['color']],
+				['para', ['ul', 'ol', 'paragraph']],
+				['table', ['table']],
+				['insert', ['link', 'picture', 'video']],
+				['view', ['fullscreen', 'codeview', 'help']]
+			]
+		})
+		$('#edit_screen').hide();  // 최초 편집화면은 숨김
 	})
-	$('#edit_screen').hide();	// 최초 편집화면은 숨김
-	
-})
 </script>
 </head>
 <body>
+
 	<div id="detail_screen">
-		<h1>${b.boardNo}번 상세보기</h1>
+		<h1>${b.boardNo}번 게시글 상세보기</h1>
 		<div>제목 : ${b.title}</div>
 		<div>작성자 : ${b.writer}</div>
 		<div>작성일 : ${b.createdAt}</div>
@@ -68,6 +69,7 @@ $(function(){
 			<input type="button" value="목록" onclick="fnList()">
 		</div>
 	</div>
+	
 	<div id="edit_screen">
 		<div style="cursor: pointer;" onclick="fnBack()"><i class="fa-solid fa-arrow-left"></i> 뒤로 가기</div>
 		<h1>편집화면</h1>
@@ -87,5 +89,6 @@ $(function(){
 			</div>
 		</form>
 	</div>
+	
 </body>
 </html>

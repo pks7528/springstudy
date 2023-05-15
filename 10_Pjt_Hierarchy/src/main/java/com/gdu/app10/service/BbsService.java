@@ -3,7 +3,6 @@ package com.gdu.app10.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public interface BbsService {
 	public void loadBbsList(HttpServletRequest request, Model model);

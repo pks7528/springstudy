@@ -9,9 +9,9 @@ import com.gdu.app08.domain.BoardDTO;
 /*
 	@Mapper
 	
-	1. mapper의 쿼리문을 직접 호출할 수 있는 인터페이스이다.
+	1. mapper의 쿼리문을 직접 호출할수 있는 인터페이스이다.
 	2. 쿼리문의 id와 메소드명을 동일하게 처리한다.
-	3. DBConfig.java(SqlSessionTemplate Bean이 정의된 파일)에 @MapperScan을 추가해야한다.
+	3. DBconfig.java(SqlSessionTemplate Bean이 정의된 파일)에 @MapperScan을 추가해야한다.
 */
 @Mapper
 public interface BoardMapper {

@@ -2,9 +2,6 @@ package com.gdu.app11.util;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.Year;
 import java.util.UUID;
 import java.util.regex.Matcher;
 
@@ -12,13 +9,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MyFileUtil {
-	
+
 	// 경로 구분자
 	private String sep = Matcher.quoteReplacement(File.separator);
 	
 	// String path 만들기
 	public String getPath() {
-		LocalDateTime now = LocalDateTime.now();
+		LocalDate now = LocalDate.now();
 		// 루트/storage/2023/05/08
 		return "/storage" + sep + now.getYear() + sep + String.format("%02d", now.getMonthValue()) + sep + String.format("%02d", now.getDayOfMonth());
 	}
@@ -30,11 +27,11 @@ public class MyFileUtil {
 		String extName = null;
 		
 		// 확장자에 마침표(.)가 포함된 예외 상황 처리
-		if(originName.endsWith("tar.gz")) {	// 리눅스 압축파일 확장자
+		if(originName.endsWith("tar.gz")) {
 			extName = "tar.gz";
 		} else {
-			// split(정규식)
-			// 정규식에서 마침표(.)는 모든 문자를 의미하므로 이스케이프 처리하거나 문자 클래스로 처리한다.
+			// String.split(정규식)
+			// 정규식에서 마침표(.)는 모든 문자를 의미하므로 이스케이프 처리하거나 문자클래스로 처리한다.
 			// 이스케이프 처리 : \.
 			// 문자클래스 처리 : [.]
 			String[] array = originName.split("\\.");
@@ -46,7 +43,7 @@ public class MyFileUtil {
 		return UUID.randomUUID().toString().replace("-", "") + "." + extName;
 		
 	}
-	
+
 	// String tempPath 만들기
 	public String getTempPath() {
 		return "/storage" + sep + "temp";
@@ -60,7 +57,8 @@ public class MyFileUtil {
 	// String yesterdayPath 만들기
 	public String getYesterdayPath() {
 		LocalDate date = LocalDate.now();
-		date.minusDays(1);	// 1일 전
+		date.minusDays(1);  // 1일 전
 		return "/storage" + sep + date.getYear() + sep + String.format("%02d", date.getMonthValue()) + sep + String.format("%02d", date.getDayOfMonth());
 	}
+	
 }

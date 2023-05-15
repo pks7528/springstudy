@@ -31,7 +31,7 @@ public class EmployeeController {
 			                 , HttpServletRequest request
 			                 , @RequestParam(value="recordPerPage", required=false, defaultValue="10") int recordPerPage) {
 		session.setAttribute("recordPerPage", recordPerPage);
-		return "redirect:" + request.getHeader("referer");	// 현재 주소(/employees/change/record.do)의 이전 주소(Referer)로 이동하시오.
+		return "redirect:" + request.getHeader("referer");  // 현재 주소(/employees/change/record.do)의 이전 주소(Referer)로 이동하시오.
 	}
 	
 	@GetMapping("/employees/scroll.page")
@@ -41,10 +41,10 @@ public class EmployeeController {
 	
 	@ResponseBody
 	@GetMapping(value="/employees/scroll.do", produces="application/json")
-	public Map<String, Object> scroll(HttpServletRequest request){
+	public Map<String, Object> scroll(HttpServletRequest request) {
 		return employeeListService.getEmployeeListUsingScroll(request);
 	}
-
+	
 	@GetMapping("/employees/search.do")
 	public String search(HttpServletRequest request, Model model) {
 		employeeListService.getEmployeeListUsingSearch(request, model);
@@ -53,7 +53,8 @@ public class EmployeeController {
 	
 	@ResponseBody
 	@GetMapping(value="/employees/autoComplete.do", produces="application/json")
-	public Map<String, Object> autoComplete(HttpServletRequest request){
+	public Map<String, Object> autoComplete(HttpServletRequest request) {
 		return employeeListService.getAutoComplete(request);
 	}
+	
 }

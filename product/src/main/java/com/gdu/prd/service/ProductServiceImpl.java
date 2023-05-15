@@ -17,24 +17,30 @@ public class ProductServiceImpl implements ProductService {
 	public void loadProductList(Model model) {
 		model.addAttribute("productList", productMapper.getProductList());
 		model.addAttribute("productCount", productMapper.getProductCount());
-		
 	}
-
+	
 	@Override
 	public int addProduct(ProductDTO productDTO) {
 		int addResult = productMapper.addProduct(productDTO);
 		return addResult;
 	}
 	
-//	@Override
-//	public int addProduct(String prodName, int prodPrice) {
-//		int addResult = productMapper.addProduct(prodName, prodPrice);
-//		return addResult;
-//	}
-	
 	@Override
 	public void loadProduct(int prodNo, Model model) {
 		ProductDTO productDTO = productMapper.getProductByNo(prodNo);
 		model.addAttribute("productDTO", productDTO);
 	}
+	
+	@Override
+	public int modifyProduct(ProductDTO productDTO) {
+		int modifyResult = productMapper.modifyProduct(productDTO);
+		return modifyResult;
+	}
+	
+	@Override
+	public int deleteProduct(int prodNo) {
+		int deleteResult = productMapper.deleteProduct(prodNo);
+		return deleteResult;
+	}
+	
 }

@@ -17,16 +17,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-@MapperScan(basePackages= {"com.gdu.app09.mapper"})			// @Mapper가 존재하는 패키지를 작성한다.
-@PropertySource(value={"classpath:application.properties"})	// application.properties 파일의 속성을 읽어 오자!
-@EnableTransactionManagement								// 트랜잭션 처리를 허용한다. 
+@MapperScan(basePackages={"com.gdu.app09.mapper"})           // @Mapper가 존재하는 패키지를 작성한다.
+@PropertySource(value={"classpath:application.properties"})  // application.properties 파일의 속성을 읽어 오자!
+@EnableTransactionManagement                                 // 트랜잭션 처리를 허용한다.
 @Configuration
 public class DBConfig {
-	
+
 	@Autowired
-	private Environment env; // 프로터티를 불러들이는 @@PropertySource ?? / 빈은 스피링이 가지고 있다
+	private Environment env;
 	
-	// HikariConfig Bean
+	// HikaryConfig Bean
 	@Bean
 	public HikariConfig hikariConfig() {
 		HikariConfig hikariConfig = new HikariConfig();
@@ -38,7 +38,7 @@ public class DBConfig {
 	}
 	
 	// HikariDataSource Bean
-	@Bean(destroyMethod = "close")
+	@Bean(destroyMethod="close")
 	public HikariDataSource hikariDataSource() {
 		return new HikariDataSource(hikariConfig());
 	}
@@ -53,7 +53,7 @@ public class DBConfig {
 		return bean.getObject();
 	}
 	
-	// SqlSessionTemplate Bean (기존의 SqlSession)
+	// SqlSessionTemplate Bean
 	@Bean
 	public SqlSessionTemplate sqlSessionTemplate() throws Exception {
 		return new SqlSessionTemplate(sqlSessionFactory());
@@ -64,4 +64,5 @@ public class DBConfig {
 	public TransactionManager transactionManager() {
 		return new DataSourceTransactionManager(hikariDataSource());
 	}
+	
 }

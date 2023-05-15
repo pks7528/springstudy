@@ -31,5 +31,11 @@
 	  	)
 	</insert>
 	
+	<select id="getStaffSearch" resultType="StaffDTO">
+		SELECT SNO, NAME, DEPT, SALARY
+		  FROM STAFF
+		 WHERE SNO = #{sno}
+	</select>
+	
 	
 </mapper>

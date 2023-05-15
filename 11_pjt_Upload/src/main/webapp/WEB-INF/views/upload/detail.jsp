@@ -26,8 +26,18 @@
 		frm.prop('action', '${contextPath}/upload/removeUpload.do');
 		frm.submit();
 	}
+	function fnList(){
+		location.href = '${contextPath}/upload/list.do';
+	}
+	let modifyResult = '${modifyResult}';
+	if(modifyResult != ''){
+		if(modifyResult == '1'){
+			alert('UPLOAD 게시글 수정 성공');
+		} else {
+			alert('UPLOAD 게시글 수정 실패');
+		}
+	}
 </script>
-
 </head>
 <body>
 
@@ -43,6 +53,7 @@
 			<input type="hidden" name="uploadNo" value="${upload.uploadNo}">
 			<input type="button" value="편집" onclick="fnEditUpload()">
 			<input type="button" value="삭제" onclick="fnRemoveUpload()">
+			<input type="button" value="목록" onclick="fnList()">
 		</form>
 	</div>
 	
@@ -51,9 +62,9 @@
 	<div>
 		<h4>첨부 목록 및 다운로드</h4>
 		<c:if test="${empty attachList}">
-			<div>첨부된 파일이 없습니다</div>
+			<div>첨부된 파일이 없습니다.</div>
 		</c:if>
-		<c:if test="${not empty attachList}">
+		<c:if test="${not empty attachList}">		
 			<div>
 				<c:forEach items="${attachList}" var="attach">
 					<div>
